@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='string2string',
-    version='0.0.1.2',
+    version='0.0.1.2.1',
     description='Pattern matching (string to string) algorithms',
     url='https://github.com/suzgunmirac/string2string',
     author='Mirac Suzgun',

@@ -1,12 +1,13 @@
 """
     Edit distance algorithms:
         [x] Levenshtein edit distance
-        [ ] Hamming edit distance
+        [x] Hamming edit distance
         [ ] Damerau–Levenshtein edit distance
         [ ] Jaro–Winkler edit distance
 """
 
 # Import relevant libraries and dependencies
+from typing import List, Union
 import numpy as np
 
 
@@ -26,12 +27,12 @@ class EditDistAlgs:
         self.substite_weight = substite_weight
 
 
-    def levenshtein_edit_distance(self, str1: str, str2: str) -> float:
+    def levenshtein_edit_distance(self, str1: Union[str, List[str]], str2: Union[str, List[str]]) -> float:
         """
             Levenshtein edit distance refers to the minimum number of edit distance oeprations (insertion, 
             deletion,and substitution) needed to transform one string into another.
 
-            This function calculates the Levenshtein edit distance between two strings using dynamic programming.
+            This function calculates the Levenshtein edit distance between two strings or (lists of strings) using dynamic programming.
             This implementation follows the original Wagner-Fischer algorithm.
                 - Its time and space complexities are both quadratic (i.e., O(n x m))).
                 - However, one can easily improve the space complexity and make it linear.
@@ -59,3 +60,20 @@ class EditDistAlgs:
                     dist[i-1, j] + self.delete_weight
                 )
         return dist[n, m]
+
+    
+    def hamming_distance(self, str1: Union[str, List[str]], str2: Union[str, List[str]]) -> float:
+        """
+            Hamming distance is equal to the number of positions at which two equal-length strings differ.
+            In other words, it refers to the minimum number of substitution operations needed to transformer on string into another.
+        """
+        if len(str1) != len(str2):
+            raise ValueError('The lengths of the two strings (or lists of strings) must be equal.')
+        
+        dist = 0.
+        for i in range(len(str1)):
+            # This is a more abstract implementation of the Hamming distance function.
+            # In theory, it is possible for a match to have a cost as well.
+            # For istance, we might want to penalize longer strings.
+            dist += self.match_weight if str1[i] == str2[i] else self.substite_weight
+        return dist
