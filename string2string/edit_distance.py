@@ -23,6 +23,8 @@ class EditDistAlgs:
         delete_weight: int = 1.0,
         match_weight: int = 0.0,
         substite_weight: int = 1.0,
+        adjacent_transposition_weight: int = 1.0,
+        list_of_list_separator: str = " ## ",
     ) -> None:
         # All the weights should be non-negative.
         assert min(insert_weight, delete_weight, match_weight, substite_weight) >= 0
@@ -32,7 +34,8 @@ class EditDistAlgs:
         self.delete_weight = delete_weight
         self.match_weight = match_weight
         self.substite_weight = substite_weight
-        self.list_of_list_separator = " ## "
+        self.adjacent_transposition_weight = adjacent_transposition_weight
+        self.list_of_list_separator = list_of_list_separator
 
     def stringlist_cartesian_product(
         self,
@@ -98,6 +101,56 @@ class EditDistAlgs:
                     dist[i, j - 1] + self.insert_weight,
                     dist[i - 1, j] + self.delete_weight,
                 )
+        return dist[n, m]
+
+    def damerau_levenshtein_edit_distance(
+        self, str1: Union[str, List[str]], str2: Union[str, List[str]]
+    ) -> float:
+        """
+        Definition:
+        "Damerau–Levenshtein distance" is the minimum number of insertion,
+        deletion, substitution, or adjacent transposition opertions needed to transform one string into another.
+
+        Notes:
+        (a) Damerau–Levenshtein operations := Levenshtein edit distance operations + adjacent transposition.
+        (b) The dynamic programming solution to this problem uses a simple extensension of the Wagner-Fisher algorithm. It therefore admits a quadratic space and time complexity.
+        """
+
+        # Lengths of strings str1 and str2, respectively.
+        n = len(str1)
+        m = len(str2)
+
+        # Initialization of the distance matrix of size (n+1) x (m+1)
+        dist = np.zeros((n + 1, m + 1))
+        for i in range(1, n + 1):
+            dist[i, 0] = self.delete_weight * i
+        for j in range(1, m + 1):
+            dist[0, j] = self.insert_weight * j
+
+        # Dynamic programming solution (similar to the Wagner-Fischer algorithm)
+        for i in range(1, n + 1):
+            for j in range(1, m + 1):
+                dist[i, j] = min(
+                    dist[i - 1, j - 1]
+                    + (
+                        self.substite_weight
+                        if str1[i - 1] != str2[j - 1]
+                        else self.match_weight
+                    ),
+                    dist[i, j - 1] + self.insert_weight,
+                    dist[i - 1, j] + self.delete_weight,
+                )
+                if (
+                    i > 1
+                    and j > 1
+                    and str1[i - 1] == str2[j - 2]
+                    and str1[i - 2] == str2[j - 1]
+                ):
+                    dist[i, j] = min(
+                        dist[i, j],
+                        dist[i - 2, j - 2] + self.adjacent_transposition_weight,
+                    )
+
         return dist[n, m]
 
     def hamming_distance(
@@ -227,8 +280,17 @@ class EditDistAlgs:
         if printBacktrack:
             candidates = [str1[(i - max_length) : i] for i in max_length_indices]
             if boolListOfList:
-                candidates = list(set([f'{self.list_of_list_separator}'.join(cand) for cand in candidates]))
-                candidates = [cand.split(self.list_of_list_separator) for cand in candidates]
+                candidates = list(
+                    set(
+                        [
+                            f"{self.list_of_list_separator}".join(cand)
+                            for cand in candidates
+                        ]
+                    )
+                )
+                candidates = [
+                    cand.split(self.list_of_list_separator) for cand in candidates
+                ]
             else:
                 candidates = list(set(candidates))
         return max_length, candidates

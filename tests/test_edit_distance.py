@@ -20,7 +20,6 @@ class EditDistanceTestCase(TestCase):
         self.assertEqual(dist, 2.0)
         # Example 2
         dist = algs_unit.levenshtein_edit_distance("monty-python", "monty-python")
-        print(dist)
         self.assertEqual(dist, 0.0)
         # Example 3
         dist = algs_unit.levenshtein_edit_distance("kitten", "sitting")
@@ -76,6 +75,55 @@ class EditDistanceTestCase(TestCase):
         dist = algs_weighted.levenshtein_edit_distance("ttss", "stst")
         self.assertEqual(dist, 2.0)
 
+    def test_damerau_levenshtein_edit_distance_unit_operations(self):
+        ## Case 1: Costs of insertion, deletion, substitution, and transposition are all 1.
+        algs_unit = EditDistAlgs()
+        # Example 0
+        dist = algs_unit.damerau_levenshtein_edit_distance("", "")
+        self.assertEqual(dist, 0.0)
+        # Example 1
+        dist = algs_unit.damerau_levenshtein_edit_distance("aa", "bb")
+        self.assertEqual(dist, 2.0)
+        # # Example 2
+        dist = algs_unit.damerau_levenshtein_edit_distance(
+            "monty-python", "monty-python"
+        )
+        self.assertEqual(dist, 0.0)
+        # Example 3
+        dist = algs_unit.damerau_levenshtein_edit_distance("ab", "ba")
+        self.assertEqual(dist, 1.0)
+        # Example 4
+        dist = algs_unit.damerau_levenshtein_edit_distance("sitting", "kitten")
+        self.assertEqual(dist, 3.0)
+        # Example 5
+        dist = algs_unit.damerau_levenshtein_edit_distance("baaaaa", "ab")
+        self.assertEqual(dist, 5.0)
+        # Example 6
+        dist = algs_unit.damerau_levenshtein_edit_distance("ababab", "bababa")
+        self.assertEqual(dist, 2.0)
+        # Example 7
+        dist = algs_unit.damerau_levenshtein_edit_distance("abxymn", "bayxnm")
+        self.assertEqual(dist, 3.0)
+        # Example 8
+        dist = algs_unit.damerau_levenshtein_edit_distance("wikiepdia", "wikipedia")
+        self.assertEqual(dist, 1.0)
+        # Example 9
+        dist = algs_unit.damerau_levenshtein_edit_distance("microaoft", "microsoft")
+        self.assertEqual(dist, 1.0)
+        # Example 10
+        dist = algs_unit.damerau_levenshtein_edit_distance(
+            ["kurt", "godel"], ["godel", "kurt"]
+        )
+        self.assertEqual(dist, 1.0)
+        # Example 11
+        dist = algs_unit.damerau_levenshtein_edit_distance(
+            ["kurt", "godel", "kurt"], ["godel", "kurt"]
+        )
+        self.assertEqual(dist, 1.0)
+        # Example 12
+        dist = algs_unit.damerau_levenshtein_edit_distance("microaoft", "microsoft")
+        self.assertEqual(dist, 1.0)
+
     def test_hamming_edit_distance(self):
         algs_unit = EditDistAlgs()
         # Example 1
@@ -118,44 +166,44 @@ class EditDistanceTestCase(TestCase):
             "aa", "aa", printBacktrack=True
         )
         self.assertEqual(dist, 2.0)
-        self. assertCountEqual(candidates, ["aa"])
+        self.assertCountEqual(candidates, ["aa"])
         # Example 2
         dist, candidates = algs_unit.longest_common_subsequence(
             "ab", "ba", printBacktrack=True
         )
         self.assertEqual(dist, 1.0)
-        self. assertCountEqual(candidates, ["a", "b"])
+        self.assertCountEqual(candidates, ["a", "b"])
         # Example 3
         dist, candidates = algs_unit.longest_common_subsequence(
             "ab", "cd", printBacktrack=True
         )
         self.assertEqual(dist, 0.0)
-        self. assertCountEqual(candidates, [""])
+        self.assertCountEqual(candidates, [""])
         # Example 4
         dist, candidates = algs_unit.longest_common_subsequence(
             "ab", "xxaaabyy", printBacktrack=True
         )
         self.assertEqual(dist, 2.0)
-        self. assertCountEqual(candidates, ["ab"])
+        self.assertCountEqual(candidates, ["ab"])
         # Example 5
         dist, candidates = algs_unit.longest_common_subsequence(
             "abcd", "xcxaaabydy", printBacktrack=True
         )
         self.assertEqual(dist, 3.0)
-        self. assertCountEqual(candidates, ["abd"])
+        self.assertCountEqual(candidates, ["abd"])
         # Example 6
         dist, candidates = algs_unit.longest_common_subsequence(
             "aabbccdd", "dcdcbaba", printBacktrack=True
         )
         self.assertEqual(dist, 2.0)
-        self. assertCountEqual(candidates, ["dd", "cc", "bb", "aa", "cd", "ab"])
+        self.assertCountEqual(candidates, ["dd", "cc", "bb", "aa", "cd", "ab"])
 
         # Example 7
         dist, candidates = algs_unit.longest_common_subsequence(
             ["abcd"], ["xcxaaabydy"], printBacktrack=True, boolListOfList=True
         )
         self.assertEqual(dist, 0.0)
-        self. assertCountEqual(candidates, [])
+        self.assertCountEqual(candidates, [])
         # Example 8
         dist, candidates = algs_unit.longest_common_subsequence(
             ["a", "bb", "c"],
@@ -164,7 +212,7 @@ class EditDistanceTestCase(TestCase):
             boolListOfList=True,
         )
         self.assertEqual(dist, 3.0)
-        self. assertCountEqual(candidates, [["a", "bb", "c"]])
+        self.assertCountEqual(candidates, [["a", "bb", "c"]])
         # Example 9
         dist, candidates = algs_unit.longest_common_subsequence(
             ["a", "b", "c", "dd"],
@@ -173,7 +221,7 @@ class EditDistanceTestCase(TestCase):
             boolListOfList=True,
         )
         self.assertEqual(dist, 3.0)
-        self. assertCountEqual(candidates, [["a", "b", "dd"]])
+        self.assertCountEqual(candidates, [["a", "b", "dd"]])
         # Example 10
         dist, candidates = algs_unit.longest_common_subsequence(
             ["a", "t", "b", "c", "y", "dd", "xyz"],
@@ -217,10 +265,13 @@ class EditDistanceTestCase(TestCase):
             "xyxy", "yxyx", printBacktrack=True
         )
         self.assertEqual(dist, 3)
-        self. assertCountEqual(candidates, ["xyx", "yxy"])
+        self.assertCountEqual(candidates, ["xyx", "yxy"])
         # Example 5
         dist, candidates = algs_unit.longest_common_substring(
-            ["x", "y", "x", "y"], ["y", "x", "y", "x"], printBacktrack=True, boolListOfList=True
+            ["x", "y", "x", "y"],
+            ["y", "x", "y", "x"],
+            printBacktrack=True,
+            boolListOfList=True,
         )
         self.assertEqual(dist, 3)
         self.assertCountEqual(candidates, [["x", "y", "x"], ["y", "x", "y"]])
@@ -236,6 +287,12 @@ class EditDistanceTestCase(TestCase):
         )
         self.assertEqual(dist, 1)
         self.assertCountEqual(candidates, ["x"])
+        # Example 8
+        dist, candidates = algs_unit.longest_common_substring(
+            " julia ", "  julie ", printBacktrack=True
+        )
+        self.assertEqual(dist, 5)
+        self.assertCountEqual(candidates, [" juli"])
 
 
 if __name__ == "__main__":
