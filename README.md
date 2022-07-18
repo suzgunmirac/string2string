@@ -4,14 +4,14 @@
     - [x] Levenshtein edit distance
         - [x] Wagner–Fischer (WF) algorithm:  O(nm) time and O(nm) space
             - [ ] Efficient version of WF:  O(nm) time and O(min(n,m)) space
-    - [ ] Hamming edit distance
+    - [x] Hamming edit distance
         - Naive solution: O(n) time and O(1) space
     - [ ] Damerau–Levenshtein edit distance
     - [ ] Jaro–Winkler edit distance
 
 ### Alignment / Similarity:
     - [ ] Longest common substring
-    - [ ] Longest common subsequence
+    - [x] Longest common subsequence
     - [ ] Sequence alignment
         - [ ] Smith-Waterman algorithm (local):  O(nm) time and O(nm) space
         - [ ] Needleman–Wunsch algorithm (global): O(nm) time and O(nm) space

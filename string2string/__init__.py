@@ -3,5 +3,5 @@
 """
 
 __version__ = "0.0.1"
-__author__ = 'Mirac Suzgun'
-__credits__ = 'Stanford University'
+__author__ = "Mirac Suzgun"
+__credits__ = "Stanford University"
