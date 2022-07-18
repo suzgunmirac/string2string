@@ -57,13 +57,19 @@ class EditDistAlgs:
         self, str1: Union[str, List[str]], str2: Union[str, List[str]]
     ) -> float:
         """
-        Levenshtein edit distance refers to the minimum number of edit distance oeprations (insertion,
-        deletion,and substitution) needed to transform one string into another.
+        Definition:
+        "Levenshtein edit distance" is the minimum number of edit distance oeprations (insertion,
+        deletion, and substitution) needed to transform one string into another.
 
-        This function calculates the Levenshtein edit distance between two strings or (lists of strings) using dynamic programming.
-        This implementation follows the original Wagner-Fischer algorithm.
-            - Its time and space complexities are both quadratic (i.e., O(n x m))).
-            - However, one can easily improve the space complexity and make it linear.
+        Notes:
+        (a) This algorithm computes the Levenshtein edit distance between two strings using dynamic programming.
+        (b) It follows the original Wagner-Fischer algorithm (see: Wagner, R.A. and Fischer, M.J., 1974. The string-to-string correction problem. Journal of the ACM (JACM), 21(1), pp.168-173.)
+            (i) The time and space complexities of the algorithm are both quadratic (i.e., O(n x m))).
+            (ii) One can easily improve the space complexity and make it linear though. (Hint: Focus only on the last computed row.)
+            (iii) The time complexity, however, cannot be made strongly subquadratic time unless SETH is false.
+                - See: "Edit Distance Cannot Be Computed in Strongly Subquadratic Time (unless SETH is false)"
+                        [by Arturs Backurs (MIT) and Piotr Indyk (MIT), 2017].
+                - Paper link: https://arxiv.org/pdf/1412.0348.pdf
         """
 
         # Lengths of strings str1 and str2, respectively.
@@ -98,8 +104,8 @@ class EditDistAlgs:
         self, str1: Union[str, List[str]], str2: Union[str, List[str]]
     ) -> float:
         """
-        Hamming distance is equal to the number of positions at which two equal-length strings differ.
-        In other words, it refers to the minimum number of substitution operations needed to transformer on string into another.
+        Definition:
+        "Hamming distance" equals  the number of positions at which two equal-length strings differ.In other words, it refers to the minimum number of substitution operations needed to transformer one string into another.
         """
         if len(str1) != len(str2):
             raise ValueError(
@@ -110,7 +116,7 @@ class EditDistAlgs:
         for i in range(len(str1)):
             # This is a more abstract implementation of the Hamming distance function.
             # In theory, it is possible for a match to have a cost as well.
-            # For istance, we might want to penalize longer strings.
+            # For instance, we might want to penalize longer strings.
             dist += self.match_weight if str1[i] == str2[i] else self.substite_weight
         return dist
 
@@ -122,10 +128,13 @@ class EditDistAlgs:
         boolListOfList: bool = False,
     ) -> Tuple[float, Union[List[str], List[List[str]]]]:
         """
-        Longest common subsequence (LCSubseq) of two strings (or lists of strings) is a subsequence of maximal length that appears in both of them.
-        - Not that a common subsequence is a sequence that appears in both strings in some increasing order, but not necessarily contigious.
+        Definition:
+        "Longest common subsequence" (LCSubseq) of two strings is a subsequence of maximal length that appears in both of them.
 
-        linear space solution.
+        Notes:
+        (a) Note that a common subsequence is a sequence that appears in both strings in some increasing order, but it does not  necessarily have to be contigious.
+        (b) The following dynamic programming solution has a quadratic (i.e., O(nm)) space and time complexity.
+        (c) If the vocabulary is fixed, LCSubseq admits a "Four-Russians speedup," thereby reducing its overall time complexity to subquadratic (O(n^2/log n)).
         """
         # Lengths of strings str1 and str2, respectively.
         n = len(str1)
@@ -133,6 +142,7 @@ class EditDistAlgs:
 
         # Initialization of the matrix d of size (n+1) x (m+1)
         d = np.zeros((n + 1, m + 1))
+
         # Normally need to initialize d[i, j] = 0 for i =0 or j = 0
         # But that is already taken care of under this implementation since we initialize the matrix with all 0's.
 
@@ -145,7 +155,7 @@ class EditDistAlgs:
 
         def backtrack(i: int, j: int) -> Union[List[str], List[List[str]]]:
             """
-            Given the matrix d, backtracks and prints all the longest subsequences.
+            Given the matrix d, backtracks and prints the set of "all" the longest subsequences.
             """
             if i == 0 or j == 0:
                 return [""] if not (boolListOfList) else []
@@ -169,11 +179,50 @@ class EditDistAlgs:
                 rest += backtrack(i - 1, j)
             return list(set(rest))
 
-        lcs_candidates = None
+        candidates = None
         if printBacktrack:
-            lcs_candidates = backtrack(n, m)
-            if boolListOfList and lcs_candidates:
-                lcs_candidates = [
-                    elt.split(self.list_of_list_separator) for elt in lcs_candidates
+            candidates = backtrack(n, m)
+            if boolListOfList and candidates:
+                candidates = [
+                    elt.split(self.list_of_list_separator) for elt in candidates
                 ]
-        return d[n, m], lcs_candidates
+        return d[n, m], candidates
+
+    def longest_common_substring(
+        self,
+        str1: Union[str, List[str]],
+        str2: Union[str, List[str]],
+        printBacktrack: bool = False,
+    ) -> Tuple[float, Union[List[str], List[List[str]]]]:
+        """
+        Definition:
+        "Longest common substring" (LCSubstring) of two strings is a substring of maximal length that appears in both of them.
+
+        Notes:
+        (a) The following dynamic programming approach has a quadratic time and space complexity.
+        """
+        # Lengths of strings str1 and str2, respectively.
+        n = len(str1)
+        m = len(str2)
+
+        # Initialization of the matrix d of size (n+1) x (m+1)
+        # Here d[i,j] denotes the length of the longest common suffixes of substrings str1[:i] and str2[:j].
+        d = np.zeros((n + 1, m + 1)).astype(int)
+
+        max_length = 0
+        max_length_indices = []
+        for i in range(1, n + 1):
+            for j in range(1, m + 1):
+                if str1[i - 1] == str2[j - 1]:
+                    d[i, j] = d[i - 1, j - 1] + 1
+                    if max_length < d[i, j]:
+                        max_length = d[i, j]
+                        max_length_indices = [i]
+                    elif max_length == d[i, j]:
+                        max_length_indices.append(i)
+                else:
+                    d[i, j] = 0
+        candidates = None
+        if printBacktrack:
+            candidates = [str1[(i - max_length) : i] for i in max_length_indices]
+        return max_length, candidates

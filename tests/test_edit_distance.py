@@ -152,6 +152,7 @@ class EditDistanceTestCase(TestCase):
 
         # Note that lists of lists are not hashable; so, we will not be able to
         # use "sets" to compare our results with the ground truth.
+
         # Example 7
         dist, candidates = algs_unit.longest_common_subsequence(
             ["abcd"], ["xcxaaabydy"], printBacktrack=True, boolListOfList=True
@@ -187,6 +188,45 @@ class EditDistanceTestCase(TestCase):
         self.assertEqual(
             candidates, [["t", "b", "y", "dd", "xyz"], ["a", "b", "y", "dd", "xyz"]]
         )
+
+    def test_longest_common_subsequence(self):
+        algs_unit = EditDistAlgs()
+        # Example 1
+        dist, candidates = algs_unit.longest_common_substring(
+            "aa", "aa", printBacktrack=True
+        )
+        self.assertEqual(dist, 2)
+        self.assertEqual(set(candidates), set(["aa"]))
+        # Example 2
+        dist, candidates = algs_unit.longest_common_substring(
+            "aabb", "aa", printBacktrack=True
+        )
+        self.assertEqual(dist, 2)
+        self.assertEqual(set(candidates), set(["aa"]))
+        # Example 3
+        dist, candidates = algs_unit.longest_common_substring(
+            "aabbaa", "aa", printBacktrack=True
+        )
+        self.assertEqual(dist, 2)
+        self.assertEqual(set(candidates), set(["aa"]))
+        # Example 4
+        dist, candidates = algs_unit.longest_common_substring(
+            "xyxy", "yxyx", printBacktrack=True
+        )
+        self.assertEqual(dist, 3)
+        self.assertEqual(set(candidates), set(["xyx", "yxy"]))
+        # Example 4
+        dist, candidates = algs_unit.longest_common_substring(
+            "xyxy", "yxyx", printBacktrack=True
+        )
+        self.assertEqual(dist, 3)
+        self.assertEqual(set(candidates), set(["xyx", "yxy"]))
+        # Example 5
+        dist, candidates = algs_unit.longest_common_substring(
+            ["x", "y", "x", "y"], ["y", "x", "y", "x"], printBacktrack=True
+        )
+        self.assertEqual(dist, 3)
+        self.assertEqual(candidates, [["x", "y", "x"], ["y", "x", "y"]])
 
 
 if __name__ == "__main__":

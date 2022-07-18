@@ -10,7 +10,7 @@
     - [ ] Jaro–Winkler edit distance
 
 ### Alignment / Similarity:
-    - [ ] Longest common substring
+    - [x] Longest common substring
     - [x] Longest common subsequence
     - [ ] Sequence alignment
         - [ ] Smith-Waterman algorithm (local):  O(nm) time and O(nm) space
