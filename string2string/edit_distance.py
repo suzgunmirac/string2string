@@ -193,6 +193,7 @@ class EditDistAlgs:
         str1: Union[str, List[str]],
         str2: Union[str, List[str]],
         printBacktrack: bool = False,
+        boolListOfList: bool = False,
     ) -> Tuple[float, Union[List[str], List[List[str]]]]:
         """
         Definition:
@@ -225,4 +226,9 @@ class EditDistAlgs:
         candidates = None
         if printBacktrack:
             candidates = [str1[(i - max_length) : i] for i in max_length_indices]
+            if boolListOfList:
+                candidates = list(set([f'{self.list_of_list_separator}'.join(cand) for cand in candidates]))
+                candidates = [cand.split(self.list_of_list_separator) for cand in candidates]
+            else:
+                candidates = list(set(candidates))
         return max_length, candidates

@@ -118,47 +118,44 @@ class EditDistanceTestCase(TestCase):
             "aa", "aa", printBacktrack=True
         )
         self.assertEqual(dist, 2.0)
-        self.assertEqual(set(candidates), set(["aa"]))
+        self. assertCountEqual(candidates, ["aa"])
         # Example 2
         dist, candidates = algs_unit.longest_common_subsequence(
             "ab", "ba", printBacktrack=True
         )
         self.assertEqual(dist, 1.0)
-        self.assertEqual(set(candidates), set(["a", "b"]))
+        self. assertCountEqual(candidates, ["a", "b"])
         # Example 3
         dist, candidates = algs_unit.longest_common_subsequence(
             "ab", "cd", printBacktrack=True
         )
         self.assertEqual(dist, 0.0)
-        self.assertEqual(set(candidates), set([""]))
+        self. assertCountEqual(candidates, [""])
         # Example 4
         dist, candidates = algs_unit.longest_common_subsequence(
             "ab", "xxaaabyy", printBacktrack=True
         )
         self.assertEqual(dist, 2.0)
-        self.assertEqual(set(candidates), set(["ab"]))
+        self. assertCountEqual(candidates, ["ab"])
         # Example 5
         dist, candidates = algs_unit.longest_common_subsequence(
             "abcd", "xcxaaabydy", printBacktrack=True
         )
         self.assertEqual(dist, 3.0)
-        self.assertEqual(set(candidates), set(["abd"]))
+        self. assertCountEqual(candidates, ["abd"])
         # Example 6
         dist, candidates = algs_unit.longest_common_subsequence(
             "aabbccdd", "dcdcbaba", printBacktrack=True
         )
         self.assertEqual(dist, 2.0)
-        self.assertEqual(set(candidates), set(["dd", "cc", "bb", "aa", "cd", "ab"]))
-
-        # Note that lists of lists are not hashable; so, we will not be able to
-        # use "sets" to compare our results with the ground truth.
+        self. assertCountEqual(candidates, ["dd", "cc", "bb", "aa", "cd", "ab"])
 
         # Example 7
         dist, candidates = algs_unit.longest_common_subsequence(
             ["abcd"], ["xcxaaabydy"], printBacktrack=True, boolListOfList=True
         )
         self.assertEqual(dist, 0.0)
-        self.assertEqual(set(candidates), set([]))
+        self. assertCountEqual(candidates, [])
         # Example 8
         dist, candidates = algs_unit.longest_common_subsequence(
             ["a", "bb", "c"],
@@ -167,7 +164,7 @@ class EditDistanceTestCase(TestCase):
             boolListOfList=True,
         )
         self.assertEqual(dist, 3.0)
-        self.assertEqual(candidates, [["a", "bb", "c"]])
+        self. assertCountEqual(candidates, [["a", "bb", "c"]])
         # Example 9
         dist, candidates = algs_unit.longest_common_subsequence(
             ["a", "b", "c", "dd"],
@@ -176,7 +173,7 @@ class EditDistanceTestCase(TestCase):
             boolListOfList=True,
         )
         self.assertEqual(dist, 3.0)
-        self.assertEqual(candidates, [["a", "b", "dd"]])
+        self. assertCountEqual(candidates, [["a", "b", "dd"]])
         # Example 10
         dist, candidates = algs_unit.longest_common_subsequence(
             ["a", "t", "b", "c", "y", "dd", "xyz"],
@@ -196,37 +193,49 @@ class EditDistanceTestCase(TestCase):
             "aa", "aa", printBacktrack=True
         )
         self.assertEqual(dist, 2)
-        self.assertEqual(set(candidates), set(["aa"]))
+        self.assertCountEqual(candidates, ["aa"])
         # Example 2
         dist, candidates = algs_unit.longest_common_substring(
             "aabb", "aa", printBacktrack=True
         )
         self.assertEqual(dist, 2)
-        self.assertEqual(set(candidates), set(["aa"]))
+        self.assertCountEqual(candidates, ["aa"])
         # Example 3
         dist, candidates = algs_unit.longest_common_substring(
             "aabbaa", "aa", printBacktrack=True
         )
         self.assertEqual(dist, 2)
-        self.assertEqual(set(candidates), set(["aa"]))
+        self.assertCountEqual(candidates, ["aa"])
         # Example 4
         dist, candidates = algs_unit.longest_common_substring(
             "xyxy", "yxyx", printBacktrack=True
         )
         self.assertEqual(dist, 3)
-        self.assertEqual(set(candidates), set(["xyx", "yxy"]))
+        self.assertCountEqual(candidates, ["xyx", "yxy"])
         # Example 4
         dist, candidates = algs_unit.longest_common_substring(
             "xyxy", "yxyx", printBacktrack=True
         )
         self.assertEqual(dist, 3)
-        self.assertEqual(set(candidates), set(["xyx", "yxy"]))
+        self. assertCountEqual(candidates, ["xyx", "yxy"])
         # Example 5
         dist, candidates = algs_unit.longest_common_substring(
-            ["x", "y", "x", "y"], ["y", "x", "y", "x"], printBacktrack=True
+            ["x", "y", "x", "y"], ["y", "x", "y", "x"], printBacktrack=True, boolListOfList=True
         )
         self.assertEqual(dist, 3)
-        self.assertEqual(candidates, [["x", "y", "x"], ["y", "x", "y"]])
+        self.assertCountEqual(candidates, [["x", "y", "x"], ["y", "x", "y"]])
+        # Example 6
+        dist, candidates = algs_unit.longest_common_substring(
+            ["a", "a", "a", "a"], ["a"], printBacktrack=True, boolListOfList=True
+        )
+        self.assertEqual(dist, 1)
+        self.assertCountEqual(candidates, [["a"]])
+        # Example 7
+        dist, candidates = algs_unit.longest_common_substring(
+            "x", "xxxx", printBacktrack=True
+        )
+        self.assertEqual(dist, 1)
+        self.assertCountEqual(candidates, ["x"])
 
 
 if __name__ == "__main__":
