@@ -294,6 +294,45 @@ class EditDistanceTestCase(TestCase):
         self.assertEqual(dist, 5)
         self.assertCountEqual(candidates, [" juli"])
 
+    def test_jaccard_similarity(self):
+        algs_unit = EditDistAlgs()
+        # Example 1
+        sim_coeff = algs_unit.jaccard_similarity_coefficient("aa", "aa")
+        self.assertEqual(sim_coeff, 1.0)
+        # Example 2
+        sim_coeff = algs_unit.jaccard_similarity_coefficient("aa", "ab")
+        self.assertEqual(sim_coeff, 0.5)
+        # Example 3
+        sim_coeff = algs_unit.jaccard_similarity_coefficient("aa", "bb")
+        self.assertEqual(sim_coeff, 0.0)
+        # Example 4
+        sim_coeff = algs_unit.jaccard_similarity_coefficient("ab", "bc")
+        self.assertEqual(sim_coeff, 1.0 / 3.0)
+        # Example 5
+        sim_coeff = algs_unit.jaccard_similarity_coefficient("abcd", "cd")
+        self.assertEqual(sim_coeff, 0.5)
+        # Example 6
+        sim_coeff = algs_unit.jaccard_similarity_coefficient("abcd", "d")
+        self.assertEqual(sim_coeff, 0.25)
+        # Example 7
+        sim_coeff = algs_unit.jaccard_similarity_coefficient(["ab"], ["a"])
+        self.assertEqual(sim_coeff, 0.0)
+        # Example 8
+        sim_coeff = algs_unit.jaccard_similarity_coefficient(["ab", "b"], ["a", "b"])
+        self.assertEqual(sim_coeff, 1.0 / 3.0)
+        # Example 9
+        sim_coeff = algs_unit.jaccard_similarity_coefficient("", "abc")
+        self.assertEqual(sim_coeff, 0.0)
+        # Example 10
+        sim_coeff = algs_unit.jaccard_similarity_coefficient("", "")
+        self.assertEqual(sim_coeff, 1.0)
+
+    def test_jaccard_index(self):
+        """
+        Since Jaccard index is simply 1. - Jaccard similarity coefficient, we will be skipping the tests for this function.
+        """
+        pass
+
 
 if __name__ == "__main__":
     unittest.main()

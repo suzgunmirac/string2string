@@ -1,9 +1,12 @@
 """
-    Edit distance algorithms:
+    String algorithms implemented so far:
         [x] Levenshtein edit distance
         [x] Hamming edit distance
-        [ ] Damerau–Levenshtein edit distance
-        [ ] Jaro–Winkler edit distance
+        [x] Damerau–Levenshtein edit distance
+        [x] Jaccard distance
+        [x] Jaccard similarity
+        [x] Longest common substring
+        [x] Longest common subsequence
 """
 
 # Import relevant libraries and dependencies
@@ -61,8 +64,7 @@ class EditDistAlgs:
     ) -> float:
         """
         Definition:
-        "Levenshtein edit distance" is the minimum number of edit distance oeprations (insertion,
-        deletion, and substitution) needed to transform one string into another.
+        "Levenshtein edit distance" is the minimum number of edit distance oeprations (insertion, deletion, and substitution) needed to transform one string into another.
 
         Notes:
         (a) This algorithm computes the Levenshtein edit distance between two strings using dynamic programming.
@@ -172,6 +174,31 @@ class EditDistAlgs:
             # For instance, we might want to penalize longer strings.
             dist += self.match_weight if str1[i] == str2[i] else self.substite_weight
         return dist
+
+    def jaccard_similarity_coefficient(
+        self, str1: Union[str, List[str]], str2: Union[str, List[str]]
+    ) -> float:
+        """
+        Definition:
+        "Jaccard similarity coefficient (index)" measures the similarity between two sets of strings (or lists of strings).
+        It is equal to the ratio of the intersection over the union of the two sets.
+        """
+        set1 = set(str1)
+        set2 = set(str2)
+        # Justification: In case both of them are empty strings.
+        if str1 == str2:
+            return 1.0
+        return (len(set1.intersection(set2))) / (float(len(set1.union(set2))))
+
+    def jaccard_index(
+        self, str1: Union[str, List[str]], str2: Union[str, List[str]]
+    ) -> float:
+        """
+        Definition:
+        "Jaccard index" measures the "dissimilarity" between two "sets" of strings (or sets of lists of strings).
+        By definition, it is equal to 1. - (Jaccard similarity coefficient).
+        """
+        return 1.0 - self.jaccard_similarity_coefficient(str1, str2)
 
     def longest_common_subsequence(
         self,
